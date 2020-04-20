@@ -2,32 +2,11 @@
 #ifndef STATE_ESTIMATION_H
 #define STATE_ESTIMATION_H
 #include "CLEAR_Datetype.h"
-//#include "RobotModel/include/RobotModel.h"
+#include "RobotModel/include/RobotModel.h"
 template <typename T>
 class RobotModel;
 //some struct needed
-struct IMUData {
-    Vec3<float> accelerometer;
-    Vec3<float> gyro;
-    Quat<float> quat;
-};
 
-template <typename T>
-struct StateEstimate {
-    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-    Vec4<T> contactEstimate;
-    Vec3<T> position;
-    Vec3<T> vBody;
-    Quat<T> orientation;
-    Vec3<T> omegaBody;
-    RotMat<T> rBody;
-    Vec3<T> rpy;
-
-    Vec3<T> omegaWorld;
-    Vec3<T> vWorld;
-    Vec3<T> aBody, aWorld;
-
-};
 
 template <typename T>
 struct StateEstimatorData {
@@ -67,7 +46,7 @@ public:
     const StateEstimate<T>& getResult() { 
         return *_stateEstimatorData.result; }
 
-     void setContactPhase(Vec4<T>& phase) { 
+    void setContactPhase(Vec4<T>& phase) { 
     *_stateEstimatorData.contactPhase = phase; 
   }
 

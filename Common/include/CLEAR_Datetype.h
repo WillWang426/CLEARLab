@@ -15,7 +15,7 @@ struct SensorData
 struct CommandData
 {
     /* data */
-      float q_des_abad[4];
+  float q_des_abad[4];
   float q_des_hip[4];
   float q_des_knee[4];
 
@@ -36,7 +36,28 @@ struct CommandData
   float tau_knee_ff[4];
 };
 
+struct IMUData {
+    Vec3<float> accelerometer;
+    Vec3<float> gyro;
+    Quat<float> quat;
+};
 
+template <typename T>
+struct StateEstimate {
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+    Vec4<T> contactEstimate;
+    Vec3<T> position;
+    Vec3<T> vBody;
+    Quat<T> orientation;
+    Vec3<T> omegaBody;
+    RotMat<T> rBody;
+    Vec3<T> rpy;
+
+    Vec3<T> omegaWorld;
+    Vec3<T> vWorld;
+    Vec3<T> aBody, aWorld;
+
+};
 
 
 

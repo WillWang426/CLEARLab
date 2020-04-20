@@ -5,8 +5,8 @@
 #include "Common/include/Dynamics/Quadruped.h"
 #include "Common/include/Dynamics/FloatingBaseModel.h"
 #include "Common/include/Dynamics/MiniCheetah.h"
-#include "StateEstimation/include/stateEstimation.h"
-//#include "CLEAR_Datetype.h"
+//#include "StateEstimation/include/stateEstimation.h"
+#include "CLEAR_Datetype.h"
 template <typename T>
 struct RobotData
 {   
@@ -48,7 +48,7 @@ public:
 
     void zeroCommand(); 
     void updateRobotData(SensorData* snsdata); //TODO
-    void updateFBMState(StateEstimate<T>* stateEstimate); //TODO
+    void updateFBMState(const StateEstimate<T>* stateEstimate); //TODO
     void updateCommand(CommandData* cmdData); //TODO
 
 private:

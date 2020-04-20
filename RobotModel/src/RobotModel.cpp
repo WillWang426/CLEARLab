@@ -52,7 +52,7 @@ void RobotModel<T>::updateRobotData(SensorData* snsdata) {
 }
 
 template <typename T>
-void RobotModel<T>::updateFBMState(StateEstimate<T>* stateEstimate) {
+void RobotModel<T>::updateFBMState(const StateEstimate<T>* stateEstimate) {
     FBModelState<T> state;
     state.bodyOrientation = stateEstimate->orientation;
     state.bodyPosition    = stateEstimate->position;
