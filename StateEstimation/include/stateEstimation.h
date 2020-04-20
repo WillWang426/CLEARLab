@@ -1,9 +1,10 @@
 //this file contains all the state estimation algorithm
 #ifndef STATE_ESTIMATION_H
 #define STATE_ESTIMATION_H
-
-#include "RobotModel/include/RobotModel.hpp"
-
+#include "CLEAR_Datetype.h"
+//#include "RobotModel/include/RobotModel.h"
+template <typename T>
+class RobotModel;
 //some struct needed
 struct IMUData {
     Vec3<float> accelerometer;
@@ -33,7 +34,7 @@ struct StateEstimatorData {
     StateEstimate<T>* result;  
     IMUData* xsensData;
     //LegControllerData<T>* legControllerData;
-    RobotData<T>* legData;
+    //RobotData<T>* legData;
     Vec4<T>* contactPhase;
     
 };
@@ -44,7 +45,8 @@ template <typename T>
 class StateEstimation{
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-    StateEstimation(RobotModel* model, IMUData* imudata){
+    
+    StateEstimation(RobotModel<T>* model, IMUData* imudata){
         _model = model;
         _stateEstimatorData.xsensData = imudata;
         this->setup();

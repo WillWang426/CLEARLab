@@ -1,7 +1,12 @@
-#include "Dynamics/Quadruped.h"
-#include "Dynamics/FloatingBaseModel.h"
-#include "Dynamics/MiniCheetah.h"
+#ifndef ROBOT_MODEL
+#define ROBOT_MODEL
 
+
+#include "Common/include/Dynamics/Quadruped.h"
+#include "Common/include/Dynamics/FloatingBaseModel.h"
+#include "Common/include/Dynamics/MiniCheetah.h"
+#include "StateEstimation/include/stateEstimation.h"
+//#include "CLEAR_Datetype.h"
 template <typename T>
 struct RobotData
 {   
@@ -29,25 +34,25 @@ class RobotModel
 public:
     RobotModel(){
         _quadruped = buildMiniCheetah<T>();
-        _model = _quadruped->buildModel<T>();
-    };
+        _model = _quadruped.buildModel();
+    }
     
     ~RobotModel(){
-        delete _quadruped;
-    };
+        // delete _quadruped;
+    }
 
-    Quadruped<T>* _quadruped = nullptr;
+    Quadruped<T> _quadruped;
     FloatingBaseModel<T> _model;
     RobotData<T> _robotData[4];
     RobotCommand<T> _robotCommand[4];
 
     void zeroCommand(); 
     void updateRobotData(SensorData* snsdata); //TODO
-    void updateFBMState(StateEstimate* stateEstimate); //TODO
+    void updateFBMState(StateEstimate<T>* stateEstimate); //TODO
     void updateCommand(CommandData* cmdData); //TODO
 
 private:
     void computeLegJacobianAndPosition(int leg);
 };
 
-
+#endif

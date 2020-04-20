@@ -1,11 +1,11 @@
-
+#include "StateEstimation/include/stateEstimation.h"
 #include "ControlData.h"
 #include "convexMPC/LocomotionControl.h"
 
 
 class RobotControl {
 public:
-    RobotControl(RobotModel<float>* robotModel,StateEstimatorContainer<float>* stateEstimator);
+    RobotControl(RobotModel<float>* robotModel,StateEstimation<float>* stateEstimator);
     ~RobotControl(){}
 
     void runController();

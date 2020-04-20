@@ -1,5 +1,6 @@
-
-#include "RobotModel/include/RobotModel.hpp"
+#ifndef ROBOT_CONTROL
+#define ROBOT_CONTROL
+#include "RobotModel/include/RobotModel.h"
 #include "StateEstimation/include/stateEstimation.h"
 
 template <typename T>
@@ -11,3 +12,4 @@ struct ControlData {
 template struct ControlData<double>;
 template struct ControlData<float>;
  
+#endif

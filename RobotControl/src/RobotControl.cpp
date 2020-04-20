@@ -5,6 +5,6 @@ RobotControl::RobotControl(RobotModel<float>* robotModel,   StateEstimation<floa
     controlData->_stateEstimator = stateEstimator;
 }
 
-RobotControl::runController() {
-    locomotion.run(controlData);
+void RobotControl::runController() {
+    locomotion.run(*controlData);
 }

@@ -1,4 +1,4 @@
-#include "RobotModel.h"
+#include "RobotModel/include/RobotModel.h"
 
 template <typename T>
 void RobotData<T>::zero() {
@@ -52,12 +52,12 @@ void RobotModel<T>::updateRobotData(SensorData* snsdata) {
 }
 
 template <typename T>
-void RobotModel<T>::updateFBMState(StateEstimate* stateEstimate) {
+void RobotModel<T>::updateFBMState(StateEstimate<T>* stateEstimate) {
     FBModelState<T> state;
-    state.bodyOrientation = _stateEstimate->orientation;
-    state.bodyPosition    = _stateEstimate->position;
-    state.bodyVelocity.head(3) = _stateEstimate->omegaBody;
-    state.bodyVelocity.tail(3) = _stateEstimate->vBody;
+    state.bodyOrientation = stateEstimate->orientation;
+    state.bodyPosition    = stateEstimate->position;
+    state.bodyVelocity.head(3) = stateEstimate->omegaBody;
+    state.bodyVelocity.tail(3) = stateEstimate->vBody;
 
     state.q.setZero(12);
     state.qd.setZero(12);
@@ -71,7 +71,7 @@ void RobotModel<T>::updateFBMState(StateEstimate* stateEstimate) {
         state.qd(3*i+2)= _robotData[i].qd[2];
     }
 
-    _model->setState(state);
+    _model.setState(state);
 }
 
 template <typename T>
@@ -115,47 +115,47 @@ void RobotModel<T>::updateCommand(CommandData* cmdData) {
         cmdData->qd_des_knee[leg] = _robotCommand[leg].qdDes(2);
 
         // estimate torque
-        _robotData[leg].tauEstimate =
-            legTorque +
-            _robotCommand[leg].kpJoint * (_robotCommand[leg].qDes - _robotData[leg].q) +
-            _robotCommand[leg].kdJoint * (_robotCommand[leg].qdDes - _robotData[leg].qd);
+        // _robotData[leg].tauEstimate =
+        //     legTorque +
+        //     _robotCommand[leg].kpJoint * (_robotCommand[leg].qDes - _robotData[leg].q) +
+        //     _robotCommand[leg].kdJoint * (_robotCommand[leg].qdDes - _robotData[leg].qd);
     }
 }
 
 template <typename T>
 void RobotModel<T>::computeLegJacobianAndPosition(int leg) {
 
-    T l1 = _quadruped->_abadLinkLength;
-    T l2 = _quadruped->_hipLinkLength;
-    T l3 = _quadruped->_kneeLinkLength;
-    T l4 = _quadruped->_kneeLinkY_offset;
-    T sideSign = _quadruped->getSideSign(leg);
+    T l1 = _quadruped._abadLinkLength;
+    T l2 = _quadruped._hipLinkLength;
+    T l3 = _quadruped._kneeLinkLength;
+    T l4 = _quadruped._kneeLinkY_offset;
+    T sideSign = _quadruped.getSideSign(leg);
 
-    T s1 = std::sin(q(0));
-    T s2 = std::sin(q(1));
-    T s3 = std::sin(q(2));
+    T s1 = std::sin(_robotData[leg].q(0));
+    T s2 = std::sin(_robotData[leg].q(1));
+    T s3 = std::sin(_robotData[leg].q(2));
 
-    T c1 = std::cos(q(0));
-    T c2 = std::cos(q(1));
-    T c3 = std::cos(q(2));
+    T c1 = std::cos(_robotData[leg].q(0));
+    T c2 = std::cos(_robotData[leg].q(1));
+    T c3 = std::cos(_robotData[leg].q(2));
 
     T c23 = c2 * c3 - s2 * s3;
     T s23 = s2 * c3 + c2 * s3;
 
-    _robotData[leg].J->operator()(0, 0) = 0;
-    _robotData[leg].J->operator()(0, 1) = l3 * c23 + l2 * c2;
-    _robotData[leg].J->operator()(0, 2) = l3 * c23;
-    _robotData[leg].J->operator()(1, 0) = l3 * c1 * c23 + l2 * c1 * c2 - (l1+l4) * sideSign * s1;
-    _robotData[leg].J->operator()(1, 1) = -l3 * s1 * s23 - l2 * s1 * s2;
-    _robotData[leg].J->operator()(1, 2) = -l3 * s1 * s23;
-    _robotData[leg].J->operator()(2, 0) = l3 * s1 * c23 + l2 * c2 * s1 + (l1+l4) * sideSign * c1;
-    _robotData[leg].J->operator()(2, 1) = l3 * c1 * s23 + l2 * c1 * s2;
-    _robotData[leg].J->operator()(2, 2) = l3 * c1 * s23;
+    _robotData[leg].J.operator()(0, 0) = 0;
+    _robotData[leg].J.operator()(0, 1) = l3 * c23 + l2 * c2;
+    _robotData[leg].J.operator()(0, 2) = l3 * c23;
+    _robotData[leg].J.operator()(1, 0) = l3 * c1 * c23 + l2 * c1 * c2 - (l1+l4) * sideSign * s1;
+    _robotData[leg].J.operator()(1, 1) = -l3 * s1 * s23 - l2 * s1 * s2;
+    _robotData[leg].J.operator()(1, 2) = -l3 * s1 * s23;
+    _robotData[leg].J.operator()(2, 0) = l3 * s1 * c23 + l2 * c2 * s1 + (l1+l4) * sideSign * c1;
+    _robotData[leg].J.operator()(2, 1) = l3 * c1 * s23 + l2 * c1 * s2;
+    _robotData[leg].J.operator()(2, 2) = l3 * c1 * s23;
     
 
-    _robotData[leg].p->operator()(0) = l3 * s23 + l2 * s2;
-    _robotData[leg].p->operator()(1) = (l1+l4) * sideSign * c1 + l3 * (s1 * c23) + l2 * c2 * s1;
-    _robotData[leg].p->operator()(2) = (l1+l4) * sideSign * s1 - l3 * (c1 * c23) - l2 * c1 * c2;
+    _robotData[leg].p.operator()(0) = l3 * s23 + l2 * s2;
+    _robotData[leg].p.operator()(1) = (l1+l4) * sideSign * c1 + l3 * (s1 * c23) + l2 * c2 * s1;
+    _robotData[leg].p.operator()(2) = (l1+l4) * sideSign * s1 - l3 * (c1 * c23) - l2 * c1 * c2;
 }
 
 template struct RobotCommand<double>;

@@ -1,4 +1,5 @@
 #include "../include/stateEstimation.h"
+#include "RobotModel/include/RobotModel.h"
 #include "Common/include/Math/orientation_tools.h"
 using namespace ori;
 
@@ -137,7 +138,7 @@ void StateEstimation<T>::linearKFPositionVelocityEstimator() {
   for (int i = 0; i < 4; i++) {
     int i1 = 3 * i;
  
-    Vec3<T> ph = _model->_quadruped->getHipLocation(i);  // hip positions relative to CoM
+    Vec3<T> ph = _model->_quadruped.getHipLocation(i);  // hip positions relative to CoM
  
     Vec3<T> p_rel = ph + this->_model->_robotData[i].p;
     
@@ -214,6 +215,7 @@ void StateEstimation<T>::linearKFPositionVelocityEstimator() {
       this->_stateEstimatorData.result->vWorld;
 }
 
+template <typename T>
 void StateEstimation<T>::run(){
   
   this->orientationEstimator();

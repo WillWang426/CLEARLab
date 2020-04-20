@@ -11,9 +11,9 @@
 #define LIBBIOMIMETICS_QUADRUPED_H
 
 #include <vector>
-#include "Dynamics/ActuatorModel.h"
-#include "Dynamics/FloatingBaseModel.h"
-#include "Dynamics/SpatialInertia.h"
+#include "Common/include/Dynamics/ActuatorModel.h"
+#include "Common/include/Dynamics/FloatingBaseModel.h"
+#include "Common/include/Dynamics/SpatialInertia.h"
 
 #include <eigen3/Eigen/StdVector>
 
